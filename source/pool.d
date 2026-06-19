@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2014-2026 Timur Gafarov 
+
 Boost Software License - Version 1.0 - August 17th, 2003
 
 Permission is hereby granted, free of charge, to any person or organization
@@ -21,3 +24,46 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+*/
+module pool;
+
+struct Pool(T, size_t size)
+{
+    T[size] data;
+    uint length = 0;
+
+    T opIndex(size_t i)
+    {
+        return data[i];
+    }
+    
+    T opIndexAssign(T val, size_t i)
+    {
+        return (data[i] = val);
+    }
+
+    void add(T t)
+    {
+        if (length < data.length)
+        {
+            data[length] = t;
+            length++;
+        }
+    }
+
+    void remove(uint n)
+    {
+        uint i = 0;
+        for (uint j = 0; j < n; j++)
+        {
+            if (j != n)
+                data[i++] = data[j];
+        }
+        length--;
+    }
+
+    void clear()
+    {
+        length = 0;
+    }
+}

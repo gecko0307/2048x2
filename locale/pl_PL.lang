@@ -1,0 +1,7 @@
+Score: "Wynik: %d";
+GameOver: "Koniec gry!";
+WaitForPlayer1: "Oczekiwanie na gracza 1...";
+WaitForPlayer2: "Oczekiwanie na gracza 2...";
+YouWin: "Wygrałeś!";
+YouLose: "Przegrałeś!";
+PressEnter: "Naciśnij <Enter>, aby zrestartować";

@@ -1,0 +1,7 @@
+Score: "Σκορ: %d";
+GameOver: "Τέλος παιχνιδιού!";
+WaitForPlayer1: "Αναμονή για τον Παίκτη 1...";
+WaitForPlayer2: "Αναμονή για τον Παίκτη 2...";
+YouWin: "Νίκησες!";
+YouLose: "Έχασες!";
+PressEnter: "Πατήστε <Enter> για επανεκκίνηση";

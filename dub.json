@@ -1,0 +1,20 @@
+{
+    "name": "dagon-2048x2",
+    "description": "2048 game for two players",
+    "homepage": "https://github.com/gecko0307/dagon-2048x2",
+    "license": "BSL-1.0",
+    "authors": [
+        "Timur Gafarov"
+    ],
+    "dependencies": {
+        "dagon": "~>1.1.0"
+    },
+    "buildRequirements": [
+        "allowWarnings"
+    ],
+    "lflags-windows": ["/SUBSYSTEM:windows", "/ENTRY:wmainCRTStartup"],
+    "targetName": "2048x2",
+    "postBuildCommands-windows": [
+        "$PACKAGE_DIR\\bin/rcedit-x64 \"2048x2.exe\" --set-file-version \"1.0.0.0\" --set-product-version \"1.0.0\" --set-icon \"$PACKAGE_DIR\\res\\icon.ico\" --application-manifest \"$PACKAGE_DIR\\res\\2048x2.manifest\""
+    ]
+}

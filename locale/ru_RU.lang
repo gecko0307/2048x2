@@ -1,0 +1,7 @@
+Score: "Счёт: %d";
+GameOver: "Игра окончена!";
+WaitForPlayer1: "Ждём Игрока 1...";
+WaitForPlayer2: "Ждём Игрока 2...";
+YouWin: "Вы выиграли!";
+YouLose: "Вы проиграли!";
+PressEnter: "Нажмите <Enter> для продолжения";
