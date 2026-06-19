@@ -1,7 +1,0 @@
-Score: "Score: %d";
-GameOver: "Game over!";
-WaitForPlayer1: "Waiting for Player 1 to finish...";
-WaitForPlayer2: "Waiting for Player 2 to finish...";
-YouWin: "You win!";
-YouLose: "You lose!";
-PressEnter: "Press <Enter> to restart";

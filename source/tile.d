@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2026 Timur Gafarov 
+Copyright (c) 2014 Timur Gafarov 
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
@@ -25,9 +25,11 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
+
 module tile;
 
 import std.math;
+import derelict.opengl.gl;
 import dlib.math.vector;
 
 struct Tile
@@ -63,7 +65,7 @@ struct Tile
         float dist = dir.length;
         dir.normalize();
 
-        if (abs(dist) > 1.0f)
+        if (abs(dist) > 0.001f)
         {
             if (dist >= speed)
                 position += dir * speed;
@@ -77,7 +79,6 @@ struct Tile
         }
     }
 
-    /*
     void draw(double dt)
     {
         if (active && value > 0)
@@ -94,6 +95,5 @@ struct Tile
         glEnd();
         glPopMatrix();
     }
-    */
 }
 

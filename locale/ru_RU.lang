@@ -1,7 +1,7 @@
-Score: "Счёт: %d";
-GameOver: "Игра окончена!";
-WaitForPlayer1: "Ждём Игрока 1...";
-WaitForPlayer2: "Ждём Игрока 2...";
-YouWin: "Вы выиграли!";
-YouLose: "Вы проиграли!";
-PressEnter: "Нажмите <Enter> для продолжения";
+"Score" = "Счет"
+"Game Over" = "Игра окончена!"
+"Press any key to restart" = "Нажмите любую клавишу"
+"Press <Enter> to restart" = "Нажмите <Enter> для продолжения"
+"Wait other player to finish" = "Ждем второго игрока..."
+"You win!" = "Вы выиграли!"
+"You lose!" = "Вы проиграли!"

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2026 Timur Gafarov 
+Copyright (c) 2014 Timur Gafarov 
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
@@ -25,25 +25,24 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
+
 module board;
 
 import std.math;
 import std.random;
 import std.conv;
-
-import dlib.core.memory;
-import dlib.core.ownership;
+import derelict.opengl.gl;
 import dlib.core.compound;
 import dlib.math.vector;
 import dlib.image.color;
-
-import dagon.graphics.drawable;
-import dagon.graphics.font;
-import dagon.ui.textline;
+import dgl.core.drawable;
+import dgl.ui.font;
+import dgl.ui.textline;
+import dgl.ui.i18n;
 
 import pool;
 import tile;
-public import boardarray;
+import boardarray;
 
 int digits(int n)
 {
@@ -59,18 +58,24 @@ int digits(int n)
 
 uint randomValue()
 {
-    return (cast(uint)dice(90, 10) + 1) * 2;
+    return (dice(90, 10) + 1) * 2;
 }
 
-class Board: Owner
+class Board: Drawable
 {
     Vector2f position = Vector2f(0, 0);
     float cellSize = 100;
-    
+
     BoardArray array;
-    
+
     Pool!(Tile, 16) tiles;
-    
+
+    TextLine text;
+    Font font;
+
+    TextLine text2;
+    Font font2;
+
     uint state = 0;
 
     bool gameOver = false;
@@ -78,19 +83,55 @@ class Board: Owner
     int score = 0;
 
     uint movingTiles = 0;
-    
-    this(Owner owner)
+
+    Color4f[uint] colors;
+    Color4f[uint] textColors;
+
+    this(Font font1, Font font2)
     {
-        super(owner);
+        this.font = font1;
+        this.font2 = font2;
+
+        colors = 
+        [
+            0: color3(0xcdc0b4),
+            2: color3(0xeee4da),
+            4: color3(0xede0c8),
+            8: color3(0xf2b179),
+           16: color3(0xf59563),
+           32: color3(0xf67c5f),
+           64: color3(0xf65e3b),
+          128: color3(0xedcf72),
+          256: color3(0xedcc61),
+          512: color3(0xedc850),
+         1024: color3(0xedc53f),
+         2048: color3(0xedc22e),
+         4096: color3(0x5fdb93)
+        ];
+
+        textColors = 
+        [
+            0: color3(0x000000),
+            2: color3(0x776e65),
+            4: color3(0x776e65)
+        ];
+
+        text = new TextLine(font, "0");
+        text.color = Color4f(0, 0, 0);
+        text.alignment = Alignment.Center;
+
+        text2 = new TextLine(font2, "");
+        text2.color = color3(0xf2b179);
+        text2.alignment = Alignment.Center;
     }
-    
+
     Vector2f cellPosition(uint x, uint y)
     {
-        return position + 
+        return position + Vector2f(0, 50) + 
                Vector2f(0.5f, 0.5f) * cellSize + 
-               Vector2f(x, y) * cellSize;
+               Vector2f(x, 3 - y) * cellSize;
     }
-    
+
     Vector2f vectorElemPosition(uint i, uint j, Direction dir)
     {
         if (dir == Direction.Left)
@@ -103,7 +144,7 @@ class Board: Owner
             return cellPosition(i, 3 - j);
         else assert(0);
     }
-    
+
     void turn(Direction dir)
     {
         if (state == 1)
@@ -120,7 +161,7 @@ class Board: Owner
             uint[4] dest;
             uint j = 0;
             
-            foreach(uint i, v; arr)
+            foreach(i, v; arr)
             {
                 if (arr[i] != 0)
                 {
@@ -174,7 +215,7 @@ class Board: Owner
 
         state = 1;
     }
-    
+
     uint[4] deref(uint*[4] p)
     {
         uint[4] res;
@@ -184,7 +225,7 @@ class Board: Owner
         res[3] = *p[3];
         return res;
     }
-    
+
     auto availableCells()
     {
         Pool!(Compound!(uint, uint), 16) res;
@@ -216,7 +257,7 @@ class Board: Owner
     {
         createRandomCell(randomValue);
     }
-    
+
     void reset(uint v1, uint v2)
     {
         gameOver = false;
@@ -227,8 +268,171 @@ class Board: Owner
         tiles.clear();
         
         array.reset();
-        
+            
         createRandomCell(v1);
         createRandomCell(v2);
     }
+    
+    void drawShadedRect(Color4f col)
+    {
+        glPushMatrix();
+        glLoadIdentity();
+        glTranslatef(position.x, position.y, 0);
+        glColor4f(col.r, col.g, col.b, col.a);
+        glBegin(GL_QUADS);
+        glVertex2f(0, 0);
+        glVertex2f(400, 0);
+        glVertex2f(400, 450);
+        glVertex2f(0, 450);
+        glEnd();
+        glPopMatrix();
+    }
+
+    override void draw(double dt)
+    {
+        glColor4f(1, 1, 1, 1);
+
+        if (state == 0)
+            drawStaticTiles(dt);
+        else if (state == 1)
+            drawMovingTiles(dt);
+        else if (state == 2)
+            drawStaticTiles(dt);
+            
+        if (state == 1)
+        {
+            if (movingTiles == 0)
+            {
+                state = 0;
+                tiles.clear();
+            }
+        }
+
+        if (gameOver)
+        {           
+            if (state == 2)
+            {
+                if (win)
+                {
+                    auto c = color3(0xefad3f);
+                    c.a = 0.75f;
+                    drawShadedRect(c);
+                
+                    text.color = Color4f(1, 1, 1);
+                    text.setPosition(position + Vector2f(200, 260));
+                    text.setText(localizef("_You win!_"));
+                    text.draw(dt);
+                    
+                    text2.color = Color4f(1, 1, 1);
+                    text2.setPosition(position + Vector2f(200, 225));
+                    text2.setText(localizef("_Press <Enter> to restart_"));
+                    text2.draw(dt);
+                }
+                else
+                {
+                    drawShadedRect(Color4f(0, 0, 0, 0.75f));
+                
+                    text.color = color3(0xefad3f);
+                    text.setPosition(position + Vector2f(200, 260));
+                    text.setText(localizef("_You lose!_"));
+                    text.draw(dt);
+                    
+                    text2.color = color3(0xefad3f);
+                    text2.setPosition(position + Vector2f(200, 225));
+                    text2.setText(localizef("_Press <Enter> to restart_"));
+                    text2.draw(dt);
+                }
+            }
+            else
+            {
+                drawShadedRect(Color4f(0, 0, 0, 0.75f));
+                
+                text.color = Color4f(1, 1, 1);
+                text.setPosition(position + Vector2f(200, 260));
+                text.setText(localizef("_Game Over_"));
+                text.draw(dt);
+
+                text2.color = color3(0xf2b179);
+                text2.setPosition(position + Vector2f(200, 225));
+                text2.setText(localizef("_Wait other player to finish_"));
+                text2.draw(dt);
+            }
+        }
+
+        text.color = Color4f(1, 1, 1);
+        text.setPosition(position + Vector2f(200, 15));
+        text.setText(localizef("_Score_: %s", score));
+        text.draw(dt);
+    }
+
+    void bindTileColor(Tile* t)
+    {
+        Color4f col;
+        if (t.value in colors)
+            col = colors[t.value];
+        else
+            col = color3(0x25bb64);
+
+        glColor4f(col.r, col.g, col.b, col.a);
+    }
+
+    Color4f textColor(Tile* t)
+    {
+        Color4f col;
+        if (t.value in textColors)
+            col = textColors[t.value];
+        else
+            col = color3(0xf9f6f2);
+        return col;
+    }
+
+    void drawStaticTiles(double dt)
+    {
+        foreach(x; 0..4)
+        foreach(y; 0..4)
+        {
+            uint v = array[x, y];
+            Tile t = Tile(v, cellPosition(x, y));
+            drawTile(&t, dt);
+        }
+    }
+
+    void drawMovingTiles(double dt)
+    {
+        foreach(x; 0..4)
+        foreach(y; 0..4)
+        {
+            Tile t = Tile(cellPosition(x, y));
+            drawTile(&t, dt);
+        }
+
+        foreach(i; 0..tiles.length)
+        {
+            auto t = &tiles.data[i];
+            drawTile(t, dt);
+
+            if (!t.active && t.unreg)
+            {
+                movingTiles--;
+                t.unreg = false;
+            }
+        }
+    }
+
+    void drawTile(Tile* t, double dt)
+    {
+        bindTileColor(t);
+        t.draw(dt);
+        if (t.value != 0)
+        {
+            text.color = textColor(t);
+            text.setPosition(t.position + Vector2f(0, -font.height * 0.5f));
+            text.setText(t.value.to!string);
+            // TODO: text scaling
+            text.draw(dt);
+        }
+    }
+
+    override void free() { }
 }
+

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2026 Timur Gafarov 
+Copyright (c) 2014 Timur Gafarov 
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
@@ -25,6 +25,7 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
+
 module pool;
 
 struct Pool(T, size_t size)

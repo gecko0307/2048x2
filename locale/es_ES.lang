@@ -1,7 +1,0 @@
-Score: "Puntuación: %d";
-GameOver: "¡Fin del juego!";
-WaitForPlayer1: "Esperando al jugador 1...";
-WaitForPlayer2: "Esperando al jugador 2...";
-YouWin: "¡Ganaste!";
-YouLose: "¡Perdiste!";
-PressEnter: "Presiona <Enter> para reiniciar";
