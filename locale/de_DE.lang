@@ -1,7 +1,7 @@
 Score: "Punkte: %d";
-GameOver: "Spiel vorbei!";
+GameOver: "Game over!";
 WaitForPlayer1: "Warten auf Spieler 1...";
 WaitForPlayer2: "Warten auf Spieler 2...";
-YouWin: "Du gewinnst!";
-YouLose: "Du verlierst!";
-PressEnter: "<Enter> drücken zum Neustarten";
+YouWin: "Du hast gewonnen!";
+YouLose: "Du hast verloren!";
+PressEnter: "Drücke <Enter> um eine neue Runde zu beginnen.";
