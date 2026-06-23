@@ -8,6 +8,9 @@ Note: this is not a port of original 2048 by Gabriele Cirulli. It was written co
 
 Original version source code is [here](https://github.com/gecko0307/2048x2/tree/original).
 
+## Building
+Install D language toolchain. Supported compilers are DMD and LDC. Run `dub build` (or `dub build --build=release-nobounds` for release version).
+
 ## Controls
 * WASD - shift tiles of the left board (Player 1)
 * Arrow keys - shift tiles of the right board (Player 2)
