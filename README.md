@@ -9,8 +9,8 @@ Note: this is not a port of original 2048 by Gabriele Cirulli. It was written co
 Original version source code is [here](https://github.com/gecko0307/2048x2/tree/original).
 
 ## Controls
-* Arrow keys - shift tiles of the right board (Player 2)
 * WASD - shift tiles of the left board (Player 1)
+* Arrow keys - shift tiles of the right board (Player 2)
 * Enter - restart the game on the final screen.
 
 ## Settings
