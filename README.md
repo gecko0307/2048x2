@@ -1,6 +1,6 @@
 # 2048x2
 
-A desktop clone of the popular puzzle game 2048 for two players. Left board is controlled with WASD, right board is controlled with arrow keys.
+A desktop clone of the popular puzzle game 2048 for two players written in [D language](https://dlang.org). Left board is controlled with WASD, right board is controlled with arrow keys.
 
 The game was originally written in 2014. In 2026, I reworked the code and ported the graphics backend to [Dagon Engine](https://github.com/gecko0307/dagon), which improved the quality of text rendering. Translations of the game into German, French, Spanish, Portuguese, and other languages ​​were also added.
 
